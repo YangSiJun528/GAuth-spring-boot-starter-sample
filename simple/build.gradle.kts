@@ -17,7 +17,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.YangSiJun528:GAuth-spring-boot-starter:0.0.1")
+    implementation("com.github.YangSiJun528:GAuth-spring-boot-starter:1.0.0")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-security")
     testImplementation("org.springframework.security:spring-security-test")
