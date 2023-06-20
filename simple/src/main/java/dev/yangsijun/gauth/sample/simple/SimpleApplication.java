@@ -3,6 +3,9 @@ package dev.yangsijun.gauth.sample.simple;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import dev.yangsijun.gauth.autoconfigure.EnableGAuth;
+
+@EnableGAuth
 @SpringBootApplication
 public class SimpleApplication {
 
