@@ -28,10 +28,4 @@ public class Controller {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return auth.getAuthorities().toString();
     }
-
-    @GetMapping("/token")
-    public String token() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return auth.toString();
-    }
 }
