@@ -17,15 +17,9 @@ public class Controller {
         return "hi teacher!";
     }
 
-    @GetMapping("/auth/info/me")
-    public String info() {
+    @GetMapping("/auth/me")
+    public Object info() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return auth.getPrincipal().toString();
-    }
-
-    @GetMapping("/auth/authority/me")
-    public String authority() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return auth.getAuthorities().toString();
+        return auth.getPrincipal();
     }
 }
