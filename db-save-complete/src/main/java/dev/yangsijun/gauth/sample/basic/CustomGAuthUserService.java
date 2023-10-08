@@ -5,16 +5,14 @@ import dev.yangsijun.gauth.core.user.GAuthUser;
 import dev.yangsijun.gauth.userinfo.DefaultGAuthUserService;
 import dev.yangsijun.gauth.userinfo.GAuthAuthorizationRequest;
 import dev.yangsijun.gauth.userinfo.GAuthUserService;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class CustomGAuthUserService implements GAuthUserService<GAuthAuthorizationRequest, GAuthUser> {
 
     private final GAuthUserService delegatingService = new DefaultGAuthUserService();
 
     private final GAuthUserRepository gauthUserRepository;
-
-    public CustomGAuthUserService(GAuthUserRepository gauthUserRepository) {
-        this.gauthUserRepository = gauthUserRepository;
-    }
 
     @Override
     public GAuthUser loadUser(GAuthAuthorizationRequest userRequest) throws GAuthAuthenticationException {
