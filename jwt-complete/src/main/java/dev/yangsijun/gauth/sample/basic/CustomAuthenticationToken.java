@@ -14,6 +14,7 @@ public class CustomAuthenticationToken extends AbstractAuthenticationToken {
     public CustomAuthenticationToken(Collection<? extends GrantedAuthority> authorities, GAuthUser principal) {
         super(authorities);
         this.principal = principal;
+        this.setAuthenticated(true);
     }
 
     @Override

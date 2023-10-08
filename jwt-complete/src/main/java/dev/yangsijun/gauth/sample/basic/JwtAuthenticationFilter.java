@@ -1,5 +1,7 @@
 package dev.yangsijun.gauth.sample.basic;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,13 +16,10 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final GAuthUserRepository gauthUserRepository;
-
-    public JwtAuthenticationFilter(GAuthUserRepository gauthUserRepository) {
-        this.gauthUserRepository = gauthUserRepository;
-    }
 
     @Override
     protected void doFilterInternal(
@@ -28,14 +27,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
-        String accessTokenHeader = request.getHeader(JwtProperties.HEADER);
+        String jwtTokenHeader = request.getHeader(JwtProperties.HEADER);
 
-        if (shouldSkipAuthentication(accessTokenHeader)) {
-            filterChain.doFilter(request, response);
+        if (shouldSkipAuthentication(jwtTokenHeader)) {
+            super.doFilter(request, response, filterChain);
             return;
         }
 
-        String accessToken = extractAccessToken(accessTokenHeader);
+        String accessToken = extractAccessToken(jwtTokenHeader);
         Long userId = getUserIdFromToken(accessToken);
         GAuthUserEntity gauthUser = getGAuthUserById(userId);
 
@@ -44,19 +43,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         SecurityContextHolder.clearContext();
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        filterChain.doFilter(request, response);
+        super.doFilter(request, response, filterChain);
     }
 
-    private boolean shouldSkipAuthentication(String accessTokenHeader) {
-        return accessTokenHeader == null || !accessTokenHeader.startsWith(JwtProperties.TOKEN_PREFIX);
+    private boolean shouldSkipAuthentication(String jwtTokenHeader) {
+        return jwtTokenHeader == null || !jwtTokenHeader.startsWith(JwtProperties.TOKEN_PREFIX);
     }
 
-    private String extractAccessToken(String accessTokenHeader) {
-        return accessTokenHeader.replace(JwtProperties.TOKEN_PREFIX, "");
+    private String extractAccessToken(String jwtTokenHeader) {
+        return jwtTokenHeader.replace(JwtProperties.TOKEN_PREFIX, "");
     }
 
     private Long getUserIdFromToken(String accessToken) {
-        return Long.valueOf(TokenParser.getTokenSubject(accessToken));
+        String userId = TokenParser.getTokenSubjectOrNull(accessToken);
+        if (userId == null) {
+            throw new BadCredentialsException("만료되거나 유효하지 않은 JWT");
+        }
+        return Long.valueOf(userId);
     }
 
     private GAuthUserEntity getGAuthUserById(Long userId) {
