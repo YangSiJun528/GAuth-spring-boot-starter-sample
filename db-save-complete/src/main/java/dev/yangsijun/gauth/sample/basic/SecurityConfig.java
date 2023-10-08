@@ -26,7 +26,7 @@ public class SecurityConfig {
                 .headers(headersConfigurer -> headersConfigurer.frameOptions().sameOrigin())
                 .authorizeHttpRequests(request -> request
                         .antMatchers(
-                        "/to-gauth-login-page",
+                        "/gauth/authorization",
                         "/login/gauth/code"
                         ).permitAll()
                         .requestMatchers(PathRequest.toH2Console()).permitAll()
@@ -34,7 +34,7 @@ public class SecurityConfig {
                         .antMatchers("/user/me").authenticated()
                         .antMatchers("/role/student").hasAuthority("GAUTH_ROLE_STUDENT")
                         .antMatchers("/role/teacher").hasAuthority("GAUTH_ROLE_TEACHER")
-                        .anyRequest().permitAll()
+                        .anyRequest().denyAll()
                 )
                 .logout(withDefaults())
                 .apply(gauth);
