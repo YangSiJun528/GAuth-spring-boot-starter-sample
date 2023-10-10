@@ -1,15 +1,14 @@
 package dev.yangsijun.gauth.sample.basic;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@RequiredArgsConstructor
 public class FilterConfig {
-    private final GAuthUserRepository gauthUserRepository;
 
-    public FilterConfig(GAuthUserRepository gauthUserRepository) {
-        this.gauthUserRepository = gauthUserRepository;
-    }
+    private final GAuthUserRepository gauthUserRepository;
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
